@@ -27,7 +27,6 @@ end
 Return a non-trivial factor if succeed
 """
 function FNFfact(N::Union{Int64, Int128,  BigInt}, b::Union{Int64, Int128,  BigInt})
-
 #    a0 = div(N,2)
     a0 = one(typeof(N)) + one(typeof(N))
     #r0 = sN
@@ -38,7 +37,7 @@ function FNFfact(N::Union{Int64, Int128,  BigInt}, b::Union{Int64, Int128,  BigI
     counter = zero(typeof(N))
 
     # ie the while loop more efficient compared to the for-loop?
-    while factorP==0 && counter < N
+    Threads.@threads while factorP==0 && counter < N
         counter = counter+1
         a = a0 + counter*BigInt(exp10(b))
         factorP = customGCD(a, a, N)
@@ -47,7 +46,39 @@ function FNFfact(N::Union{Int64, Int128,  BigInt}, b::Union{Int64, Int128,  BigI
 end
 
 """
-    FactAnalysis(N::T) where T <: Union{Int32, Int64, BigInt}   **** FALTA ARREGLAR!
+    FNFfactparalel (N::T, criticN::T) where T <: Union{Int32, Int64, BigInt}
+Return a non-trivial factor if succeed, parallel version
+
+"""
+
+function FNFfactparalel(N::Union{Int64, Int128,  BigInt}, b::Union{Int64, Int128,  BigInt})
+    #a0 = div(N,2)
+    a0 = one(typeof(N)) + one(typeof(N))
+    #r0 = sN
+    a2 = N
+    #r2 = div(r0,2)
+    #k = 1
+    factorP = zero(typeof(N))
+    counter = zero(typeof(N))
+
+    # ie the while loop more efficient compared to the for-loop?
+
+
+    while factorP==0 && counter < N
+        counter = counter+1
+        a = a0 + counter*BigInt(exp10(b))
+        factorP = customGCD(a, a, N)
+    end
+
+
+
+    return factorP, counter
+
+end
+
+
+"""
+FactAnalysis(N::T) where T <: Union{Int32, Int64, BigInt}   **** FALTA ARREGLAR!
 
 Finds the first argument of the function f(x) that throws a non-trivial factor.
 """
